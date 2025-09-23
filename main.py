@@ -1,5 +1,8 @@
 import sqlite3
 
+# importar arquivo funcoes
+import funcoes
+
 #Conectar ao banco de dados (ou criar se não existir)
 conexao = sqlite3.connect("biblioteca.db")
 
