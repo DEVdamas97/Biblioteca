@@ -8,8 +8,9 @@ cursor = conexao.cursor()
 
 def menu():
 
-    print("\n1 - Cadastrar Livros\n")
-    print("\n2 - \n")
+    print("\n1 - Cadastrar Livros")
+    print("\n2 - Listar Livro")
+    print("\n3 - Livro Disponivel")
     opcao = int(input("Escolha a sua opção: "))
 
 
@@ -27,8 +28,10 @@ def cadastrar_livro():
         INSERT INTO biblioteca (titulo, autor, ano, disponivel)
         VALUES (?, ?, ?, ?)
     """, (titulo, autor, ano, disponivel))
+    print(f"Livro: {titulo}\nCadastrado com sucesso! ✔")
     # confirma a transação para salvar as alterações
     conexao.commit()
+
 
 def listar_livros():
     """
@@ -40,6 +43,7 @@ def listar_livros():
     if not livros:
         # se a lista estiver vazia, informa que não há livros cadastrados
         print("Você não adicionou nenhum livro")
+        conexao.commit()
     else:
         # percorre cada tupla de livro e imprime seus campos
         for livro in livros:
@@ -48,6 +52,30 @@ def listar_livros():
                 f"ID: {id_livro} | Título: {titulo} | "
                 f"Autor: {autor} | Ano: {ano} | Disponível: {disponivel}"
             )
+        conexao.commit()
+        
+
+def atualizar_disponibilidade():
+    id_atualizar = int(input("Deseja atualizar qual livro? (Digite pelo id) "))
+    disponibilidade =  input("Deseja deixa-lo como disponivel ou indisponivel ?: ").lower()
+    if disponibilidade == 'sim' or disponibilidade =='disponivel':
+        cursor.execute("""
+        UPDATE biblioteca
+        SET disponivel = ? WHERE id = ? 
+        """, ("sim", id_atualizar)
+        )
+        print(f"ID: {id_atualizar} | Agora está disponível")
+        conexao.commit()
+    elif disponibilidade == "nao" or disponibilidade == 'não' or disponibilidade == 'indisponivel':
+        cursor.execute("""
+        UPDATE biblioteca
+        SET disponivel = ? WHERE id = ?
+        """, ("não", id_atualizar)
+        )
+        print(f"ID: {id_atualizar} | Agora está indisponivel")
+        conexao.commit()
 
 
-listar_livros()
+atualizar_disponibilidade()
+
+
